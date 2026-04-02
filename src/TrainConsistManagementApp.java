@@ -1,85 +1,68 @@
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 /**
  * ============================================================
  * MAIN CLASS - TrainConsistManagementApp
  * ============================================================
  *
- * Use Case 13: Performance Comparison (Loops vs Streams)
+ * Use Case 14: Handle Invalid Bogie Capacity (Custom Exception)
  *
  * Description:
- * This class compares execution time of loop-based and
- * stream-based filtering using System.nanoTime().
+ * This class prevents creation of invalid passenger bogies
+ * using a custom checked exception.
  *
- * @version 13.0
+ * @version 14.0
  */
 
 public class TrainConsistManagementApp {
 
-    // Bogie Model
-    static class Bogie {
-        String name;
+    /**
+     * Custom Exception Class
+     */
+    static class InvalidCapacityException extends Exception {
+        public InvalidCapacityException(String message) {
+            super(message);
+        }
+    }
+
+    /**
+     * Passenger Bogie Class
+     */
+    static class PassengerBogie {
+        String type;
         int capacity;
 
-        Bogie(String name, int capacity) {
-            this.name = name;
+        // Constructor with validation
+        PassengerBogie(String type, int capacity) throws InvalidCapacityException {
+
+            if (capacity <= 0) {
+                throw new InvalidCapacityException("Capacity must be greater than zero");
+            }
+
+            this.type = type;
             this.capacity = capacity;
         }
-    }
-
-    // Loop-based filtering
-    public static List<Bogie> filterUsingLoop(List<Bogie> bogies) {
-        List<Bogie> result = new ArrayList<>();
-        for (Bogie b : bogies) {
-            if (b.capacity > 60) {
-                result.add(b);
-            }
-        }
-        return result;
-    }
-
-    // Stream-based filtering
-    public static List<Bogie> filterUsingStream(List<Bogie> bogies) {
-        return bogies.stream()
-                .filter(b -> b.capacity > 60)
-                .collect(Collectors.toList());
     }
 
     public static void main(String[] args) {
 
         System.out.println("=====================================");
-        System.out.println("UC13 - Performance Comparison");
+        System.out.println("UC14 - Custom Exception Validation");
         System.out.println("=====================================\n");
 
-        // Create dataset
-        List<Bogie> bogies = new ArrayList<>();
-        for (int i = 0; i < 100000; i++) {
-            bogies.add(new Bogie("Bogie" + i, (i % 100)));
+        try {
+            // Valid bogie
+            PassengerBogie b1 = new PassengerBogie("Sleeper", 72);
+            System.out.println("Created Bogie: " + b1.type + " -> " + b1.capacity);
+
+            // Invalid bogie (will throw exception)
+            PassengerBogie b2 = new PassengerBogie("AC Chair", 0);
+            System.out.println("Created Bogie: " + b2.type);
+
+        } catch (InvalidCapacityException e) {
+            System.out.println("Error: " + e.getMessage());
         }
 
-        // LOOP PERFORMANCE
-        long startLoop = System.nanoTime();
-        List<Bogie> loopResult = filterUsingLoop(bogies);
-        long endLoop = System.nanoTime();
-        long loopTime = endLoop - startLoop;
-
-        // STREAM PERFORMANCE
-        long startStream = System.nanoTime();
-        List<Bogie> streamResult = filterUsingStream(bogies);
-        long endStream = System.nanoTime();
-        long streamTime = endStream - startStream;
-
-        // Output
-        System.out.println("Loop Filtered Count: " + loopResult.size());
-        System.out.println("Stream Filtered Count: " + streamResult.size());
-
-        System.out.println("\nExecution Time:");
-        System.out.println("Loop Time   : " + loopTime + " ns");
-        System.out.println("Stream Time : " + streamTime + " ns");
-
-        System.out.println("\nUC13 benchmarking completed...");
+        System.out.println("\nUC14 validation completed...");
     }
 }
 

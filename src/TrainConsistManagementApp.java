@@ -1,46 +1,54 @@
 
-import java.util.Arrays;
-
 /**
  * ============================================================
  * MAIN CLASS - TrainConsistManagementApp
  * ============================================================
  *
- * Use Case 17: Sort Bogie Names using Arrays.sort()
+ * Use Case 18: Linear Search for Bogie ID
  *
  * Description:
- * This class demonstrates sorting of bogie names
- * alphabetically using Java built-in Arrays.sort().
+ * This class demonstrates searching for a specific bogie ID
+ * using Linear Search on an unsorted array.
  *
- * @version 17.0
+ * @version 18.0
  */
 
 public class TrainConsistManagementApp {
 
-    // Sorting Method (used in test cases also)
-    public static void sortBogieNames(String[] bogies) {
-        Arrays.sort(bogies);
+    // Linear Search Method (used in test cases also)
+    public static boolean searchBogie(String[] bogieIds, String key) {
+
+        for (String id : bogieIds) {
+            if (id.equals(key)) {
+                return true; // Found
+            }
+        }
+        return false; // Not found
     }
 
     public static void main(String[] args) {
 
         System.out.println("=====================================");
-        System.out.println("UC17 - Sort Bogie Names using Arrays.sort()");
+        System.out.println("UC18 - Linear Search for Bogie ID");
         System.out.println("=====================================\n");
 
-        String[] bogies = {
-                "Sleeper", "AC Chair", "First Class", "General", "Luxury"
-        };
+        String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
+        String searchId = "BG309";
 
-        System.out.println("Original Bogie Names:");
-        System.out.println(Arrays.toString(bogies));
+        System.out.println("Available Bogie IDs:");
+        for (String id : bogieIds) {
+            System.out.println(id);
+        }
 
-        sortBogieNames(bogies);
+        boolean found = searchBogie(bogieIds, searchId);
 
-        System.out.println("\nSorted Bogie Names (Alphabetical):");
-        System.out.println(Arrays.toString(bogies));
+        if (found) {
+            System.out.println("\nBogie " + searchId + " found in train consist.");
+        } else {
+            System.out.println("\nBogie " + searchId + " NOT found.");
+        }
 
-        System.out.println("\nUC17 sorting completed...");
+        System.out.println("\nUC18 search completed...");
     }
 }
 
